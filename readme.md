@@ -83,7 +83,6 @@ Example request body:
 - The `fullName` object must include both `firstName` and `lastName`.
 - The `email` field must be unique.
 - Passwords are hashed before being stored in the database.
-```
 
 ## Endpoint: `/users/login`
 
@@ -181,4 +180,108 @@ Example request body:
 - Ensure that the `Content-Type` header is set to `application/json` when making the request.
 - The `email` field must be registered in the system.
 - Passwords are securely compared using hashing.
-```
+
+## Endpoint: `/users/profile`
+
+### Description
+This endpoint is used to retrieve the profile details of the authenticated user. The user must be logged in and provide a valid JWT token for authentication.
+
+### Method
+`GET`
+
+### URL
+`/users/profile`
+
+### Headers
+| Header            | Value              | Required | Description                          |
+|--------------------|--------------------|----------|--------------------------------------|
+| `Authorization`   | `Bearer <token>`   | Yes      | The JWT token of the authenticated user. |
+
+### Response
+
+#### Success Response
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "_id": "user-id",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "johndoe@example.com"
+  }
+  ```
+
+#### Error Responses
+1. **Unauthorized**
+   - **Status Code:** `401 Unauthorized`
+   - **Body:**
+     ```json
+     {
+       "message": "Unauthorized"
+     }
+     ```
+
+2. **Server Error**
+   - **Status Code:** `500 Internal Server Error`
+   - **Body:**
+     ```json
+     {
+       "error": "An unexpected error occurred"
+     }
+     ```
+
+---
+
+## Endpoint: `/users/logout`
+
+### Description
+This endpoint is used to log out the authenticated user. It clears the user's authentication token and adds it to a blacklist to prevent reuse.
+
+### Method
+`GET`
+
+### URL
+`/users/logout`
+
+### Headers
+| Header            | Value              | Required | Description                          |
+|--------------------|--------------------|----------|--------------------------------------|
+| `Authorization`   | `Bearer <token>`   | Yes      | The JWT token of the authenticated user. |
+
+### Response
+
+#### Success Response
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+
+#### Error Responses
+1. **Unauthorized**
+   - **Status Code:** `401 Unauthorized`
+   - **Body:**
+     ```json
+     {
+       "message": "Unauthorized"
+     }
+     ```
+
+2. **Server Error**
+   - **Status Code:** `500 Internal Server Error`
+   - **Body:**
+     ```json
+     {
+       "error": "An unexpected error occurred"
+     }
+     ```
+
+---
+
+### Notes
+- Ensure that the `Authorization` header is set with a valid JWT token for both `/users/profile` and `/users/logout` endpoints.
+- The logout process invalidates the token by adding it to a blacklist.
